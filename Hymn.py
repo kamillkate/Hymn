@@ -20,7 +20,7 @@ class HymnApp:
 
         # 替换单个搜索按钮为四个不同的按钮
         self.search_buttons = []
-        button_texts = ["诗歌本", "补充本", "新诗", "紅本新诗", "藍本新诗"]
+        button_texts = ["詩歌本", "补充本", "新诗", "紅本新诗", "藍本新诗"]
         for text in button_texts:
             button = ttk.Button(self.search_frame, text=text, command=lambda t=text: self.search_hymn(t))
             button.pack(side=tk.LEFT, padx=2)
@@ -43,14 +43,16 @@ class HymnApp:
         # 构造新的键格式
         key = f"{hymn_type}_{hymn_number}"
         
-        if key in self.hymn_data['content']:
-            content = self.hymn_data.content[key]
-            self.result_text.delete('1.0', tk.END)
-            self.result_text.insert(tk.END, f"诗歌类型: {hymn_type}\n诗歌编号: {hymn_number}\n\n{content['hymn_content']}")
-        else:
-            self.result_text.delete('1.0', tk.END)
-            self.result_text.insert(tk.END, f"未找到 {hymn_type} 中编号为 {hymn_number} 的诗歌")
-
+        for hymn in self.hymn_data['content']:
+            if hymn['hymn_number'] == key:
+                content = hymn['hymn_content']
+                self.result_text.delete('1.0', tk.END)
+                self.result_text.insert(tk.END, content)
+                return
+        
+        self.result_text.delete('1.0', tk.END)
+        self.result_text.insert(tk.END, f"未找到 {hymn_type} 中编号为 {hymn_number} 的诗歌")
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = HymnApp(root)
